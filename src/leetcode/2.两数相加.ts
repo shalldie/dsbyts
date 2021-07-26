@@ -33,3 +33,22 @@
 链接：https://leetcode-cn.com/problems/add-two-numbers
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 `;
+
+class ListNode {
+    val: number;
+    next: ListNode | null;
+    constructor(val?: number, next?: ListNode | null) {
+        this.val = val === undefined ? 0 : val;
+        this.next = next === undefined ? null : next;
+    }
+}
+
+function addTwoNumbers(l1: ListNode | null, l2: ListNode | null, level = 0): ListNode | null {
+    let sum = (l1?.val || 0) + (l2?.val || 0) + level;
+    level = ~~(sum / 10);
+    sum = sum % 10;
+
+    const nextNode = l1?.next || l2?.next || level ? addTwoNumbers(l1?.next!, l2?.next!, level) : null;
+
+    return new ListNode(sum, nextNode);
+}
