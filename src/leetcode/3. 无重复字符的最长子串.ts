@@ -36,5 +36,24 @@ s 由英文字母、数字、符号和空格组成
 `;
 
 function lengthOfLongestSubstring(s: string): number {
-    
+    const map = new Map<string, number>();
+    let leftIndex = 0;
+    let rightIndex = 0;
+    let maxLen = 0;
+
+    while (rightIndex < s.length) {
+        const cur = s[rightIndex];
+
+        // 如果遇到重复
+        if (map.has(cur) && map.get(cur)! >= leftIndex) {
+            leftIndex = map.get(cur)! + 1;
+            continue;
+        }
+
+        // 没有重复
+        map.set(cur, rightIndex);
+        maxLen = Math.max(maxLen, rightIndex - leftIndex + 1);
+        rightIndex++;
+    }
+    return maxLen;
 }
