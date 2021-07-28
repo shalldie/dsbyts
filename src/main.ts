@@ -9,7 +9,7 @@ P  I
 import { convert } from './leetcode/6. Z 字形变换';
 
 function main(): void {
-    console.log(convert('PAYPALISHIRING', 3));
+    console.log(convert('AB', 1));
     // console.log(convert('A', 1));
 }
 

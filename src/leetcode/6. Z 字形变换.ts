@@ -44,31 +44,25 @@ s 由英文字母（小写和大写）、',' 和 '.' 组成
 export { convert };
 
 function convert(s: string, numRows: number): string {
-    // 坐标系 x 轴长度
-    const xlen = Math.ceil(s.length / (numRows * 2 - 2)) * (1 + numRows - 2);
-    // 坐标系 y 轴长度
+    // 每一份的x轴长度
+    const pieceXLen = numRows <= 2 ? 1 : numRows - 1;
+    // 每一份占用字符长度
+    const pieceLen = numRows <= 2 ? numRows : numRows * 2 - 2;
+
+    // x/y 轴长度
+    const xlen = Math.ceil(s.length / pieceLen) * pieceXLen;
     const ylen = numRows;
 
-    // 坐标系画布
     const graphics: Record<number, Record<number, string>> = {};
 
     for (let i = 0; i < s.length; i++) {
-        const { x, y } = getPoint(i, numRows);
+        const { x, y } = getPoint(i, numRows, pieceXLen, pieceLen);
+
         graphics[x] = graphics[x] || {};
         graphics[x][y] = s[i];
     }
 
-    // console.log(JSON.stringify(graphics, null, '    '));
-    for (let y = 0; y < ylen; y++) {
-        let line = '';
-        for (let x = 0; x < xlen; x++) {
-            line += graphics[x]?.[y] || ' ';
-        }
-        console.log(line);
-    }
-
     const result = [];
-
     for (let y = 0; y < ylen; y++) {
         for (let x = 0; x < xlen; x++) {
             if (graphics[x]?.[y]) {
@@ -76,40 +70,57 @@ function convert(s: string, numRows: number): string {
             }
         }
     }
-
     return result.join('');
 }
 
-function getPoint(i: number, numRows: number) {
-    // 每对 竖线+折线 占用的长度
-    const offsetLen = numRows * 2 - 2;
+function getPoint(index: number, numRows: number, pieceXLen: number, pieceLen: number) {
+    // <=2 的时候比较特殊
+    if (numRows <= 2) {
+        return {
+            x: ~~(index / numRows),
+            y: index % numRows
+        };
+    }
 
-    // 当前偏移了多少对
-    const offsetCount = ~~((i + 1) / offsetLen);
-    // 当前偏移的余数
-    const offsetLeft = (i + 1) % offsetLen;
+    // 份数
+    const pieceNum = ~~((index + 1) / pieceLen);
+    // 余数
+    const pieceLeft = (index + 1) % pieceLen;
 
     // x/y 坐标
-    let x = offsetCount * (numRows - 1) - 1;
+    let x = pieceXLen * pieceNum - 1; // 整除情况的 x 坐标
     let y = 0;
 
-    // 如果在竖线前面一列
-    if (!offsetLeft) {
-        // x 不动
+    // 余数为0，整除
+    if (!pieceLeft) {
+        // x 不变
         y = 1;
     }
-    // 如果在 竖线 上
-    // x 坐标+1
-    // y 坐标呈下降趋势
-    else if (offsetLeft <= numRows) {
+    // 在竖线上
+    else if (pieceLeft <= numRows) {
         x += 1;
-        y = offsetLeft - 1;
+        y = pieceLeft - 1;
     }
-    // 如果在折线上
-    // y 是上升趋势
+    // 在折线上
     else {
-        x += offsetLeft - numRows + 1;
-        y = numRows - (offsetLeft - numRows) - 1;
+        x += (pieceLeft % numRows) + 1;
+        y = numRows - (pieceLeft % numRows) - 1;
     }
+
     return { x, y };
 }
+
+`
+执行用时：
+144 ms
+, 在所有 TypeScript 提交中击败了
+26.56%
+的用户
+内存消耗：
+45.1 MB
+, 在所有 TypeScript 提交中击败了
+25.52%
+的用户
+
+todo：需要优化，看下解析
+`;
