@@ -1,18 +1,20 @@
 /*
- * @lc app=leetcode.cn id=26 lang=typescript
+ * @lc app=leetcode.cn id=27 lang=typescript
  *
- * [26] 删除有序数组中的重复项
+ * [27] 移除元素
  */
 
 // @lc code=start
-function removeDuplicates(nums: number[]): number {
+function removeElement(nums: number[], val: number): number {
     let curIndex = 0;
     const len = nums.length;
+
     for (let i = 0; i < len; i++) {
-        if (nums[i] !== nums[curIndex - 1]) {
+        if (nums[i] !== val) {
             nums[curIndex++] = nums[i];
         }
     }
+
     return curIndex;
 }
 // @lc code=end
