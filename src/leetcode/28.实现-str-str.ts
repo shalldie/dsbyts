@@ -10,7 +10,7 @@ function strStr(haystack: string, needle: string): number {
         return 0;
     }
 
-    for (let i = 0; i < haystack.length; i++) {
+    for (let i = 0; i < haystack.length - needle.length + 1; i++) {
         // 先判断首字母，如果不相等
         if (haystack[i] !== needle[0]) {
             continue;

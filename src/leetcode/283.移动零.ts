@@ -9,13 +9,12 @@
  Do not return anything, modify nums in-place instead.
  */
 function moveZeroes(nums: number[]): void {
-    let curIndex = 0;
     const len = nums.length;
+    let curIndex = 0;
 
     for (let i = 0; i < len; i++) {
-        if (nums[i]) {
-            nums[curIndex] = nums[i];
-            curIndex++;
+        if (nums[i] !== 0) {
+            nums[curIndex++] = nums[i];
         }
     }
 
